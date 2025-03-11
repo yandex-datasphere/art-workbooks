@@ -802,7 +802,7 @@ class DreamBoothDataset(Dataset):
         self.crop_top_lefts = []
         self.pixel_values = []
         train_resize = transforms.Resize((size_h,size_w), interpolation=transforms.InterpolationMode.BILINEAR)
-        train_crop = transforms.CenterCrop((size_h,size_w) if center_crop else transforms.RandomCrop((size_h,size_w))
+        train_crop = transforms.CenterCrop((size_h,size_w)) if center_crop else transforms.RandomCrop((size_h,size_w))
         train_flip = transforms.RandomHorizontalFlip(p=1.0)
         train_transforms = transforms.Compose(
             [
@@ -971,8 +971,10 @@ def encode_prompt(text_encoders, tokenizers, prompt, text_input_ids_list=None):
     pooled_prompt_embeds = pooled_prompt_embeds.view(bs_embed, -1)
     return prompt_embeds, pooled_prompt_embeds
 
-
-def main(args):
+args = None
+def main(xargs):
+    global args
+    args = xargs
     if args.report_to == "wandb" and args.hub_token is not None:
         raise ValueError(
             "You cannot use both --report_to=wandb and --hub_token due to a security risk of exposing your token."
